@@ -40,8 +40,8 @@ func GetValue(key string) (value string, err error) {
 	return string(resp.Kvs[0].Value), nil
 }
 
-func Put(key,value string)(err error)  {
-	if len(strings.TrimSpace(key)) <= 0{
+func Put(key, value string) (err error) {
+	if len(strings.TrimSpace(key)) <= 0 {
 		err = errors.Wrap(errors.New("The key is empty"))
 		return
 	}
@@ -51,7 +51,7 @@ func Put(key,value string)(err error)  {
 		return
 	}
 
-	client,err := NewClient()
+	client, err := NewClient()
 	if err != nil {
 		return err
 	}
@@ -62,11 +62,11 @@ func Put(key,value string)(err error)  {
 	//去抢锁更新
 	txn := clientv3.NewKV(client).Txn(ctx)
 	//if 不存在key， then 设置它, else 抢锁失败
-	txn.If(clientv3.Compare(clientv3.CreateRevision(key),"=",0)).Then(clientv3.OpPut(key,value)).Else(clientv3.OpGet(key))
+	txn.If(clientv3.Compare(clientv3.CreateRevision(key), "=", 0)).Then(clientv3.OpPut(key, value)).Else(clientv3.OpGet(key))
 	//提交事务
-	txnResp,err := txn.Commit()
+	txnResp, err := txn.Commit()
 	if err != nil {
-		err = errors.Wrap(err,"etcd commit transaction err")
+		err = errors.Wrap(err, "etcd commit transaction err")
 		return err
 	}
 	if !txnResp.Succeeded {

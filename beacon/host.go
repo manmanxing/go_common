@@ -17,7 +17,7 @@ var __httpClient = &http.Client{
 	Timeout: time.Second * 5,
 }
 
-func getBeaconHost()(host string,err error)  {
+func getBeaconHost() (host string, err error) {
 	defer func() {
 		fmt.Println("beaconHost", host, "error", err)
 	}()
@@ -40,13 +40,13 @@ func ServiceHost() (ret string, err error) {
 	}
 	resp, err := __httpClient.Get(fmt.Sprintf("http://%s/service_host", host))
 	if err != nil {
-		err = errors.Wrap(err,"get service host err")
+		err = errors.Wrap(err, "get service host err")
 		return "", err
 	}
 	defer func() {
 		e := resp.Body.Close()
-		if  e != nil {
-			err = errors.Wrap(e,"http resp body close err")
+		if e != nil {
+			err = errors.Wrap(e, "http resp body close err")
 			return
 		}
 	}()
@@ -58,7 +58,7 @@ func ServiceHost() (ret string, err error) {
 	//body: a0e5e536e0eca350efc7c57908b0ea6910.111.157.136
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		err= errors.Wrap(err,"io read err")
+		err = errors.Wrap(err, "io read err")
 		return "", err
 	}
 	body = bytes.TrimSpace(body)

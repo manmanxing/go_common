@@ -29,13 +29,13 @@ func MasterDBClose() error {
 }
 
 //mysql db 基本信息配置
-func init()  {
-	value,err := etcd.GetValue(orderDBEtcdAddress)
+func init() {
+	value, err := etcd.GetValue(orderDBEtcdAddress)
 	if err != nil {
 		panic(err)
 	}
 
-	config,err := mysql.Decode([]byte(value))
+	config, err := mysql.Decode([]byte(value))
 	if err != nil {
 		panic(err)
 	}
@@ -44,7 +44,7 @@ func init()  {
 		if err := recover(); err != nil {
 			e := MasterDBClose()
 			if e != nil {
-				fmt.Println("master db close err:",e)
+				fmt.Println("master db close err:", e)
 			}
 			panic(err)
 		}
