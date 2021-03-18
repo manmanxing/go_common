@@ -1,7 +1,10 @@
 package util
 
 import (
+	"fmt"
+	"runtime"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -38,4 +41,28 @@ func LowestFourBytesForUserID(userID int64) string {
 	default: // n < 4:
 		return "0000"[:4-n] + str
 	}
+}
+
+//获取堆栈信息
+//要获取全部堆栈信息，可以使用  debug.PrintStack()
+func StackInfo() []string {
+	var pc [8]uintptr
+	sep := "/app/"
+	data := make([]string, 0, 8)
+	n := runtime.Callers(5, pc[:]) //note
+	for _, pc := range pc[:n] {
+		fn := runtime.FuncForPC(pc)
+		if fn == nil {
+			continue
+		}
+		file, line := fn.FileLine(pc)
+		if !strings.Contains(file, sep) {
+			continue
+		}
+		ret := strings.Split(file, sep)
+		file = ret[1]
+		//name := fn.Name()
+		data = append(data, fmt.Sprintf("(%s:%d)", file, line))
+	}
+	return data
 }

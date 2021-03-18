@@ -2,10 +2,13 @@ package middleware
 
 import (
 	"bytes"
+	"fmt"
 	"github.com/labstack/echo"
+	"github.com/manmanxing/go_center_common/api/errorResp"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"runtime/debug"
 	"strings"
 	"time"
 )
@@ -42,6 +45,7 @@ func accessLog(ctx echo.Context, accessType string, dur time.Duration, body []by
 	)
 }
 
+//健康监测
 func HealthCheck(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(context echo.Context) error {
 		eCtx := echoContext{context}
@@ -57,5 +61,29 @@ func HealthCheck(next echo.HandlerFunc) echo.HandlerFunc {
 			}
 		}
 		return next(context)
+	}
+}
+
+//异常恢复
+func Recover(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(context echo.Context) error {
+		var err error
+		defer func() {
+			if e := recover(); e != nil {
+				var recv error
+				switch r := e.(type) {
+				case error:
+					recv = r
+				default:
+					recv = fmt.Errorf("%v", r)
+				}
+				debug.PrintStack()
+				fmt.Println("server panic", recv)
+				//err = recv
+				err = errorResp.ServerError
+			}
+		}()
+		err = next(context)
+		return err
 	}
 }
