@@ -80,7 +80,7 @@ func Recover(next echo.HandlerFunc) echo.HandlerFunc {
 				debug.PrintStack()
 				fmt.Println("server panic", recv)
 				//err = recv
-				err = errorResp.ServerError
+				err = errorresp.ServerError
 			}
 		}()
 		err = next(context)
