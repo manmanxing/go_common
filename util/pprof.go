@@ -1,11 +1,10 @@
-package middleware
+package util
 
 import (
 	"github.com/labstack/echo"
 	"net/http/pprof"
 	"strings"
 )
-
 
 /*
 //main 方法调用
@@ -22,7 +21,7 @@ import (
 		}
 		dlog.Info("server start", topic, "addr", PPROFListenPort, "version", "v1.0.0")
 	}()
- */
+*/
 
 func Wrap(e *echo.Echo) {
 	WrapGroup("", e.Group(""))
