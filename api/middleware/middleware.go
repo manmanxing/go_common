@@ -5,6 +5,8 @@ import (
 	"github.com/labstack/echo"
 	"io/ioutil"
 	"log"
+	"net/http"
+	"strings"
 	"time"
 )
 
@@ -38,4 +40,22 @@ func accessLog(ctx echo.Context, accessType string, dur time.Duration, body []by
 		"time(ms)", int64(dur/time.Millisecond),
 		"request_header", ctx.Request().Header,
 	)
+}
+
+func HealthCheck(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(context echo.Context) error {
+		eCtx := echoContext{context}
+		realIp := eCtx.RealIP()
+		//这里可以根据 ip 和 method 筛选
+		if context.Request().URL.Path == "/" && strings.HasPrefix(realIp, "100.") {
+			switch context.Request().Method {
+			case http.MethodGet:
+				return context.String(http.StatusOK, "Hello, World!")
+			case http.MethodHead:
+			default:
+				return context.String(http.StatusNotFound, "Not Found")
+			}
+		}
+		return next(context)
+	}
 }
