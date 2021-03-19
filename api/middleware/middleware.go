@@ -8,7 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"runtime/debug"
+	"runtime"
 	"strings"
 	"time"
 )
@@ -65,6 +65,7 @@ func HealthCheck(next echo.HandlerFunc) echo.HandlerFunc {
 }
 
 //异常恢复
+//这里使用自定义的统一 error 格式
 func Recover(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(context echo.Context) error {
 		var err error
@@ -77,9 +78,11 @@ func Recover(next echo.HandlerFunc) echo.HandlerFunc {
 				default:
 					recv = fmt.Errorf("%v", r)
 				}
-				debug.PrintStack()
-				fmt.Println("server panic", recv)
-				//err = recv
+				//debug.PrintStack()
+				stack := make([]byte, 4<<10)         //4 KB
+				length := runtime.Stack(stack, true) //打印所有 goroutine
+				fmt.Printf("[PANIC RECOVER] %v %s\n", recv, stack[:length])
+				//改为统一错误输出
 				err = errorresp.ServerError
 			}
 		}()
