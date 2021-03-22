@@ -3,6 +3,8 @@ package http
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
+	"github.com/labstack/gommon/log"
 	"github.com/manmanxing/errors"
 	"github.com/manmanxing/go_center_common/util"
 	"io/ioutil"
@@ -263,4 +265,20 @@ func (h *HttpClient) getStrFromResp(resp *http.Response) (str string, err error)
 		return str, errors.Errorf("statusCode=%v;resp=%s", resp.StatusCode, str)
 	}
 	return str, nil
+}
+
+//增加 http 耗时日志打印
+func (h *HttpClient) log(urlPath, body, resp string, dur time.Duration, err error) {
+	urlPath, _ = url.QueryUnescape(urlPath)
+	resp = strings.Replace(resp, "\r", "", -1)
+	resp = strings.Replace(resp, "\n", " ", -1)
+	info := fmt.Sprintf("url %s,body %s,resp %s,err %v,time(ms) %d \n", urlPath, body, resp, err, int64(dur/time.Millisecond))
+	if err != nil {
+		log.Error(info)
+	} else {
+		log.Info(info)
+	}
+	if dur > time.Millisecond*500 {
+		log.Warn(info)
+	}
 }
