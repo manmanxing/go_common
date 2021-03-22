@@ -66,6 +66,11 @@ type HttpClient struct {
 }
 
 func (h *HttpClient) HttpGet(url string, data url.Values) (resp string, err error) {
+	start := time.Now()
+	defer func() {
+		h.log(url, "", resp, time.Now().Sub(start), err)
+	}()
+
 	if len(strings.TrimSpace(url)) <= 0 {
 		return "", errors.New("url is empty")
 	}
@@ -91,6 +96,11 @@ func (h *HttpClient) HttpGet(url string, data url.Values) (resp string, err erro
 }
 
 func (h *HttpClient) HttpPost(url string, bodyType string, body string) (resp string, err error) {
+	start := time.Now()
+	defer func() {
+		h.log(url, body, resp, time.Now().Sub(start), err)
+	}()
+
 	if len(strings.TrimSpace(url)) <= 0 {
 		return "", errors.New("url is empty")
 	}
@@ -119,6 +129,11 @@ func (h *HttpClient) HttpPost(url string, bodyType string, body string) (resp st
 }
 
 func (h *HttpClient) HttpPut(url string, bodyType string, body string) (resp string, err error) {
+	start := time.Now()
+	defer func() {
+		h.log(url, body, resp, time.Now().Sub(start), err)
+	}()
+
 	if len(strings.TrimSpace(url)) <= 0 {
 		return "", errors.New("url is empty")
 	}
@@ -198,6 +213,11 @@ func (h *HttpClient) HttpPostXml(url string, data url.Values) (resp string, err 
 }
 
 func (h *HttpClient) HttpPostWithHeader(url string, headers map[string]string, body string) (resp string, err error) {
+	start := time.Now()
+	defer func() {
+		h.log(url, body, resp, time.Now().Sub(start), err)
+	}()
+
 	if len(strings.TrimSpace(url)) <= 0 {
 		return "", errors.New("url is empty")
 	}
@@ -268,11 +288,11 @@ func (h *HttpClient) getStrFromResp(resp *http.Response) (str string, err error)
 }
 
 //增加 http 耗时日志打印
-func (h *HttpClient) log(urlPath, body, resp string, dur time.Duration, err error) {
-	urlPath, _ = url.QueryUnescape(urlPath)
+func (h *HttpClient) log(path, body, resp string, dur time.Duration, err error) {
+	path, _ = url.QueryUnescape(path)
 	resp = strings.Replace(resp, "\r", "", -1)
 	resp = strings.Replace(resp, "\n", " ", -1)
-	info := fmt.Sprintf("url %s,body %s,resp %s,err %v,time(ms) %d \n", urlPath, body, resp, err, int64(dur/time.Millisecond))
+	info := fmt.Sprintf("url %s,body %s,resp %s,err %v,time(ms) %d \n", path, body, resp, err, int64(dur/time.Millisecond))
 	if err != nil {
 		log.Error(info)
 	} else {
