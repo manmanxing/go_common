@@ -68,7 +68,7 @@ type HttpClient struct {
 func (h *HttpClient) HttpGet(url string, data url.Values) (resp string, err error) {
 	start := time.Now()
 	defer func() {
-		h.log(url, "", resp, time.Now().Sub(start), err)
+		h.log(url, "", resp, time.Since(start), err)
 	}()
 
 	if len(strings.TrimSpace(url)) <= 0 {
@@ -98,7 +98,7 @@ func (h *HttpClient) HttpGet(url string, data url.Values) (resp string, err erro
 func (h *HttpClient) HttpPost(url string, bodyType string, body string) (resp string, err error) {
 	start := time.Now()
 	defer func() {
-		h.log(url, body, resp, time.Now().Sub(start), err)
+		h.log(url, body, resp, time.Since(start), err)
 	}()
 
 	if len(strings.TrimSpace(url)) <= 0 {
@@ -131,7 +131,7 @@ func (h *HttpClient) HttpPost(url string, bodyType string, body string) (resp st
 func (h *HttpClient) HttpPut(url string, bodyType string, body string) (resp string, err error) {
 	start := time.Now()
 	defer func() {
-		h.log(url, body, resp, time.Now().Sub(start), err)
+		h.log(url, body, resp, time.Since(start), err)
 	}()
 
 	if len(strings.TrimSpace(url)) <= 0 {
@@ -215,7 +215,7 @@ func (h *HttpClient) HttpPostXml(url string, data url.Values) (resp string, err 
 func (h *HttpClient) HttpPostWithHeader(url string, headers map[string]string, body string) (resp string, err error) {
 	start := time.Now()
 	defer func() {
-		h.log(url, body, resp, time.Now().Sub(start), err)
+		h.log(url, body, resp, time.Since(start), err)
 	}()
 
 	if len(strings.TrimSpace(url)) <= 0 {
