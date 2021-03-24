@@ -69,7 +69,7 @@ func getOrderNoSeqByCount(count int) (list []int64, err error) {
 func getSingleTradeNoSeq() (n int64, err error) {
 	err = order.MasterDB().QueryRow(sql).Scan(&n)
 	if err != nil {
-		err = errors.Wrap(err,"db query row scan err")
+		err = errors.Wrap(err, "db query row scan err")
 		return
 	}
 	n %= 1000000000000
@@ -77,7 +77,7 @@ func getSingleTradeNoSeq() (n int64, err error) {
 }
 
 //从 channel 获取还是从数据库获取 orderNo seq
-func getTradeNoSeq()(n int64, err error) {
+func getTradeNoSeq() (n int64, err error) {
 	select {
 	case n = <-orderNoSeqChan:
 		return
@@ -92,14 +92,14 @@ func NewOrderNo(userId int64) (string, error) {
 	if userId <= 0 {
 		return "", errors.New("userid is invalid")
 	}
-	seq,err := getTradeNoSeq()
+	seq, err := getTradeNoSeq()
 	if err != nil {
 		return "", err
 	}
 
 	//拼接 orderNo
 	//20060102 + 12位数字 + 用户id的后四位
-	return time.Now().Format(util.TimeShortFormat) +
+	return time.Now().In(util.BeijingLocation).Format(util.TimeShortFormat) +
 		util.FormatSequenceNo(seq) +
-		util.LowestFourBytesForUserID(userId),nil
+		util.LowestFourBytesForUserID(userId), nil
 }
