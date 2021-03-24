@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"github.com/labstack/gommon/log"
 	"github.com/manmanxing/errors"
+	"github.com/manmanxing/go_center_common/gls"
 	"github.com/manmanxing/go_center_common/util"
+	"github.com/opentracing/opentracing-go"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -34,14 +36,16 @@ var DefaultTransport RoundTripper = &Transport{
 }
 */
 
-func NewHttpClient(timeOut time.Duration) *http.Client {
-	return &http.Client{
-		Transport: http.DefaultTransport,
-		Timeout:   timeOut,
+func NewHttpClient(timeOut time.Duration) *HttpClient {
+	return &HttpClient{
+		&http.Client{
+			Transport: http.DefaultTransport,
+			Timeout:   timeOut,
+		},
 	}
 }
 
-func NewConcurrentHttpClient(timeOut time.Duration, MaxIdleConn, maxIdleConnPerHost int) *http.Client {
+func NewConcurrentHttpClient(timeOut time.Duration, MaxIdleConn, maxIdleConnPerHost int) *HttpClient {
 	demoTransport := &http.Transport{
 		Proxy: http.ProxyFromEnvironment,
 		DialContext: (&net.Dialer{
@@ -55,14 +59,15 @@ func NewConcurrentHttpClient(timeOut time.Duration, MaxIdleConn, maxIdleConnPerH
 		TLSHandshakeTimeout:   time.Second * 10,
 		ExpectContinueTimeout: time.Second * 1,
 	}
-	return &http.Client{
-		Transport: demoTransport,
-		Timeout:   timeOut,
-	}
+	return &HttpClient{
+		&http.Client{
+			Transport: demoTransport,
+			Timeout:   timeOut,
+		}}
 }
 
 type HttpClient struct {
-	http.Client
+	*http.Client
 }
 
 func (h *HttpClient) HttpGet(url string, data url.Values) (resp string, err error) {
@@ -87,6 +92,18 @@ func (h *HttpClient) HttpGet(url string, data url.Values) (resp string, err erro
 			_ = req.Body.Close()
 		}
 	}()
+
+	span, err := injectSpan("HttpGet-"+url, req)
+	if err != nil {
+		err = errors.Wrap(err)
+		return
+	}
+	defer func() {
+		if span != nil {
+			span.Finish()
+		}
+	}()
+
 	r, err := h.Do(req)
 	if err != nil {
 		err = errors.Wrap(err)
@@ -116,6 +133,17 @@ func (h *HttpClient) HttpPost(url string, bodyType string, body string) (resp st
 	defer func() {
 		if req.Body != nil {
 			_ = req.Body.Close()
+		}
+	}()
+
+	span, err := injectSpan("HttpPost-"+url, req)
+	if err != nil {
+		err = errors.Wrap(err)
+		return
+	}
+	defer func() {
+		if span != nil {
+			span.Finish()
 		}
 	}()
 
@@ -149,6 +177,17 @@ func (h *HttpClient) HttpPut(url string, bodyType string, body string) (resp str
 	defer func() {
 		if req.Body != nil {
 			_ = req.Body.Close()
+		}
+	}()
+
+	span, err := injectSpan("HttpPut-"+url, req)
+	if err != nil {
+		err = errors.Wrap(err)
+		return
+	}
+	defer func() {
+		if span != nil {
+			span.Finish()
 		}
 	}()
 
@@ -232,6 +271,17 @@ func (h *HttpClient) HttpPostWithHeader(url string, headers map[string]string, b
 		}
 	}()
 
+	span, err := injectSpan("HttpPostWithHeader-"+url, req)
+	if err != nil {
+		err = errors.Wrap(err)
+		return
+	}
+	defer func() {
+		if span != nil {
+			span.Finish()
+		}
+	}()
+
 	for k, v := range headers {
 		req.Header.Set(k, v)
 	}
@@ -301,4 +351,16 @@ func (h *HttpClient) log(path, body, resp string, dur time.Duration, err error) 
 	if dur > time.Millisecond*500 {
 		log.Warn(info)
 	}
+}
+
+//增加 http 请求的链路追踪
+func injectSpan(serviceName string, req *http.Request) (span opentracing.Span, err error) {
+	ctx := gls.TraceCtx()
+	span, _ = opentracing.StartSpanFromContext(ctx, serviceName)
+	if span == nil {
+		return nil, nil
+	}
+	carry := opentracing.HTTPHeadersCarrier(req.Header)
+	err = span.Tracer().Inject(span.Context(), opentracing.HTTPHeaders, carry)
+	return
 }
