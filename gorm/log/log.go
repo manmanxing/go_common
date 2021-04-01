@@ -1,4 +1,4 @@
-package gorm
+package log
 
 import (
 	"database/sql/driver"
