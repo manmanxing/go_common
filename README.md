@@ -1,4 +1,4 @@
-# go_center_common
+# go_common
 
 记录一些公共组件
 
