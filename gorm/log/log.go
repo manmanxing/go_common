@@ -3,13 +3,14 @@ package log
 import (
 	"database/sql/driver"
 	"fmt"
-	"github.com/labstack/gommon/log"
 	"path"
 	"reflect"
 	"regexp"
 	"strings"
 	"time"
 	"unicode"
+
+	"github.com/labstack/gommon/log"
 )
 
 //自定义 gorm log 输出
@@ -41,7 +42,7 @@ func (l logger) Print(values ...interface{}) {
 			args := values[4].([]interface{})
 			// sql
 			var sql string
-			var formattedValues = make([]string,0)
+			var formattedValues = make([]string, 0)
 			for _, value := range args {
 				indirectValue := reflect.Indirect(reflect.ValueOf(value))
 				if indirectValue.IsValid() {

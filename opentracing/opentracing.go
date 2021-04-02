@@ -3,12 +3,13 @@ package opentracing
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/manmanxing/go_center_common/beacon/etcd"
+	"io"
+	"time"
+
+	"github.com/manmanxing/go_common/beacon/etcd"
 	"github.com/uber/jaeger-client-go"
 	"github.com/uber/jaeger-client-go/config"
 	"github.com/uber/jaeger-lib/metrics"
-	"io"
-	"time"
 )
 
 //jaeger 相关配置信息

@@ -4,11 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/labstack/gommon/log"
-	"github.com/manmanxing/errors"
-	"github.com/manmanxing/go_center_common/gls"
-	"github.com/manmanxing/go_center_common/util"
-	"github.com/opentracing/opentracing-go"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -16,6 +11,12 @@ import (
 	"reflect"
 	"strings"
 	"time"
+
+	"github.com/labstack/gommon/log"
+	"github.com/manmanxing/errors"
+	"github.com/manmanxing/go_common/gls"
+	"github.com/manmanxing/go_common/util"
+	"github.com/opentracing/opentracing-go"
 )
 
 var Default = NewHttpClient(time.Second * 5)

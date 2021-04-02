@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"encoding/json"
+
 	"github.com/manmanxing/errors"
 )
 
@@ -22,7 +23,7 @@ type Config struct {
 func Decode(data []byte) (*Config, error) {
 	var cfg Config
 	if err := json.Unmarshal(data, &cfg); err != nil {
-		err = errors.Wrap(err,"db config unmarshal err")
+		err = errors.Wrap(err, "db config unmarshal err")
 		return nil, err
 	}
 	return &cfg, nil

@@ -2,7 +2,8 @@ package config
 
 import (
 	"encoding/json"
-	"github.com/manmanxing/go_center_common/beacon/etcd"
+
+	"github.com/manmanxing/go_common/beacon/etcd"
 )
 
 const (

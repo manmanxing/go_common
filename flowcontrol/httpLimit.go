@@ -2,11 +2,12 @@ package flowcontrol
 
 import (
 	"fmt"
+
 	sentinel "github.com/alibaba/sentinel-golang/api"
 	"github.com/alibaba/sentinel-golang/core/flow"
 	"github.com/labstack/echo"
-	"github.com/manmanxing/go_center_common/flowcontrol/config"
-	"github.com/manmanxing/go_center_common/flowcontrol/middleware"
+	"github.com/manmanxing/go_common/flowcontrol/config"
+	"github.com/manmanxing/go_common/flowcontrol/middleware"
 )
 
 //http接口限流

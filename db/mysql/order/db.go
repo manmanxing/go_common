@@ -3,10 +3,11 @@ package order
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/manmanxing/go_center_common/beacon/etcd"
-	"github.com/manmanxing/go_center_common/db/mysql"
 	"time"
+
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/manmanxing/go_common/beacon/etcd"
+	"github.com/manmanxing/go_common/db/mysql"
 )
 
 const (

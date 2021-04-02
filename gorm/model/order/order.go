@@ -2,9 +2,9 @@ package order
 
 import (
 	"github.com/jinzhu/gorm"
-	"github.com/manmanxing/go_center_common/db/mysql/order"
-	"github.com/manmanxing/go_center_common/gorm/log"
-	"github.com/manmanxing/go_center_common/gorm/ot"
+	"github.com/manmanxing/go_common/db/mysql/order"
+	"github.com/manmanxing/go_common/gorm/log"
+	"github.com/manmanxing/go_common/gorm/ot"
 )
 
 //将 *sql.DB 转为 *gorm.DB

@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package orderservice;
+
+service OrderService {
+  //ping 测试连通性
+  rpc Ping (PingRequest) returns (PingReply) {}
+  //创建订单
+  rpc CreateOrder (CreateOrderRequest) returns (CreateOrderReply){}
+}
+
+
+message PingRequest {
+  string msg = 1;
+}
+
+message PingReply {
+  string msg = 1;
+}
+
+message CreateOrderRequest{
+  int64 user_id = 1;
+  string app_id = 2;
+  string mch_id = 3;
+}
+
+message CreateOrderReply{
+  string trade_no  = 1;
+}

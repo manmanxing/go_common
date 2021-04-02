@@ -3,13 +3,14 @@ package opentracing
 import (
 	"context"
 	"fmt"
+	"net/http"
+	"strings"
+
 	"github.com/labstack/echo"
-	"github.com/manmanxing/go_center_common/gls"
+	"github.com/manmanxing/go_common/gls"
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
 	"github.com/uber/jaeger-client-go"
-	"net/http"
-	"strings"
 )
 
 //从span中获取trace信息

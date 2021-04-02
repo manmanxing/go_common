@@ -1,10 +1,11 @@
 package middleware
 
 import (
+	"net/http"
+
 	sentinel "github.com/alibaba/sentinel-golang/api"
 	"github.com/alibaba/sentinel-golang/core/base"
 	"github.com/labstack/echo"
-	"net/http"
 )
 
 //参考：https://github.com/alibaba/sentinel-golang/blob/master/pkg/adapters/echo/middleware.go

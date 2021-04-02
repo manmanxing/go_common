@@ -1,8 +1,9 @@
-package errorresp
+package errorResp
 
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/manmanxing/errors"
 	"google.golang.org/grpc/codes"
 )

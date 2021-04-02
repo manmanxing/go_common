@@ -2,14 +2,15 @@ package etcd
 
 import (
 	"fmt"
-	"github.com/manmanxing/errors"
-	"github.com/manmanxing/go_center_common/util"
-	etcd "go.etcd.io/etcd/clientv3"
 	"os"
 	"strings"
 	"sync/atomic"
 	"time"
 	"unsafe"
+
+	"github.com/manmanxing/errors"
+	"github.com/manmanxing/go_common/util"
+	etcd "go.etcd.io/etcd/clientv3"
 )
 
 const (

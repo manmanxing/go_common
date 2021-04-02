@@ -2,11 +2,12 @@ package ot
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/jinzhu/gorm"
-	"github.com/manmanxing/go_center_common/gls"
+	"github.com/manmanxing/go_common/gls"
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
-	"strings"
 )
 
 //自定义插件
@@ -19,7 +20,7 @@ func InitCallback(db *gorm.DB, instance string) {
 	if len(strings.TrimSpace(instance)) <= 0 {
 		panic("instance is empty")
 	}
-	db.InstantSet("instance",instance)
+	db.InstantSet("instance", instance)
 	db.Callback().Create().Before("gorm:create").Register("before_create", genBeforeOperation("mysql-create"))
 	db.Callback().Create().After("gorm:create").Register("after_create", afterOperation)
 	db.Callback().Query().Before("gorm:query").Register("before_query", genBeforeOperation("mysql-query"))

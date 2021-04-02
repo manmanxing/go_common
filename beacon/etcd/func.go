@@ -3,11 +3,12 @@ package etcd
 import (
 	"context"
 	"fmt"
-	"github.com/manmanxing/errors"
-	"github.com/manmanxing/go_center_common/util"
-	"go.etcd.io/etcd/clientv3"
 	"strings"
 	"time"
+
+	"github.com/manmanxing/errors"
+	"github.com/manmanxing/go_common/util"
+	"go.etcd.io/etcd/clientv3"
 )
 
 //ETCD 的一些相关操作

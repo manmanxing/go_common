@@ -1,9 +1,10 @@
 package middleware
 
 import (
-	"github.com/labstack/echo"
 	"net"
 	"strings"
+
+	"github.com/labstack/echo"
 )
 
 //针对 context 进行处理

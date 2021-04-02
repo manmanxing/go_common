@@ -2,10 +2,11 @@ package sequence
 
 import (
 	"fmt"
-	"github.com/manmanxing/errors"
-	"github.com/manmanxing/go_center_common/db/mysql/order"
-	"github.com/manmanxing/go_center_common/util"
 	"time"
+
+	"github.com/manmanxing/errors"
+	"github.com/manmanxing/go_common/db/mysql/order"
+	"github.com/manmanxing/go_common/util"
 )
 
 const (

@@ -3,14 +3,15 @@ package middleware
 import (
 	"bytes"
 	"fmt"
-	"github.com/labstack/echo"
-	"github.com/manmanxing/go_center_common/api/errorResp"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"runtime"
 	"strings"
 	"time"
+
+	"github.com/labstack/echo"
+	errorresp "github.com/manmanxing/go_common/api/errorResp"
 )
 
 //自定义请求流程访问日志
