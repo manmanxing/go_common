@@ -37,7 +37,7 @@ func wrap(err error, msg string) error {
 		return &withMessageStack{
 			cause: err,
 			msg:   msg,
-			stack: callers(3),
+			stack: callers(2),
 		}
 	}
 	stack := v.StackTrace()
@@ -45,7 +45,7 @@ func wrap(err error, msg string) error {
 		return &withMessageStack{
 			cause: err,
 			msg:   msg,
-			stack: callers(3),
+			stack: callers(2),
 		}
 	}
 	if msg == "" {

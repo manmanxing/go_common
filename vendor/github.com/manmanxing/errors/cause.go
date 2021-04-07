@@ -1,6 +1,7 @@
 package errors
 
-func Cause(err error) error {
+
+func Cause(err error)error  {
 	var (
 		causer Causer
 		ok     bool

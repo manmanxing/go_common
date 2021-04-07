@@ -63,12 +63,13 @@ func stackString(stack []uintptr) string {
 }
 
 func trimFileName(name string) string {
+	//删除栈信息里的src部分
 	i := strings.Index(name, "/src/")
 	if i < 0 {
 		return name
 	}
-	//删除栈信息里的vendor部分
 	name = name[i+len("/src/"):]
+	//删除栈信息里的vendor部分
 	i = strings.Index(name, "/vendor/")
 	if i < 0 {
 		return name
