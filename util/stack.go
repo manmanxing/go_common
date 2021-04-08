@@ -31,28 +31,30 @@ main.main
 /usr/local/go/src/runtime/asm_amd64.s(1371): runtime.goexit
 */
 
-func stackInfo() []string {
-	callers := []string{}
+//打印所有的栈信息
+func StackInfoAll()string {
+	var callers string
 	for i := 0; true; i++ {
 		pc, file, line, ok := runtime.Caller(i)
 		if !ok {
 			break
 		}
 		fn := runtime.FuncForPC(pc)
-		callers = append(callers, fmt.Sprintf("%s(%d): %s \n", file, line, fn.Name()))
+		callers += fmt.Sprintf("%s(%d): %s \n", file, line, fn.Name())
 	}
 	return callers
 }
 
 //这里的 skip 一般 <= 3
-func callers(skip int) []uintptr {
+func Callers(skip int) []uintptr {
 	const depth = 32
 	var pcs [depth]uintptr
 	n := runtime.Callers(skip+1, pcs[:])
 	return pcs[:n]
 }
 
-func stackString(stack []uintptr) string {
+//打印指定 skip 层的栈信息
+func StackInfo(stack []uintptr) string {
 	if len(stack) == 0 {
 		return ""
 	}
