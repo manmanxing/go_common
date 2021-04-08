@@ -1,8 +1,8 @@
 package uuid
 
 import (
-	"github.com/chanxuehong/uuid/internal/v1"
-	"github.com/chanxuehong/uuid/internal/v5"
+	v1 "github.com/chanxuehong/uuid/internal/v1"
+	v5 "github.com/chanxuehong/uuid/internal/v5"
 )
 
 //   +------ 0 ------+------ 1 ------+------ 2 ------+------ 3 ------+

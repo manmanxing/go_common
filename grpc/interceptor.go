@@ -1,10 +1,12 @@
 package grpc
 
 import (
-	"code.qschou.com/qschou/go_center_common/ot"
 	"context"
 	"encoding/json"
 	"fmt"
+	"time"
+
+	"code.qschou.com/qschou/go_center_common/ot"
 	"github.com/labstack/gommon/log"
 	"github.com/manmanxing/go_common/gls"
 	"github.com/manmanxing/go_common/util"
@@ -13,7 +15,6 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/peer"
 	"google.golang.org/grpc/status"
-	"time"
 )
 
 /*

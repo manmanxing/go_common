@@ -32,7 +32,7 @@ main.main
 */
 
 //打印所有的栈信息
-func StackInfoAll()string {
+func StackInfoAll() string {
 	var callers string
 	for i := 0; true; i++ {
 		pc, file, line, ok := runtime.Caller(i)

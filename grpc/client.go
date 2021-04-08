@@ -1,6 +1,11 @@
 package grpc
 
 import (
+	"math/rand"
+	"sync"
+	"sync/atomic"
+	"unsafe"
+
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"github.com/grpc-ecosystem/grpc-opentracing/go/otgrpc"
 	"github.com/manmanxing/errors"
@@ -9,10 +14,6 @@ import (
 	etcd "go.etcd.io/etcd/clientv3"
 	"go.etcd.io/etcd/clientv3/naming"
 	"google.golang.org/grpc"
-	"math/rand"
-	"sync"
-	"sync/atomic"
-	"unsafe"
 )
 
 const clientConnPoolSize = 10
@@ -41,13 +42,13 @@ func (pool *clientConnPool) getClientConn(conn *grpc.ClientConn, err error) {
 		return
 	}
 
-	conn,err = NewClientConn(newEtcdClient,pool.target)
+	conn, err = NewClientConn(newEtcdClient, pool.target)
 	if err != nil {
 		return
 	}
 
 	//再将这个连接放入到连接池
-	atomic.StorePointer(&pool.conn[index],unsafe.Pointer(conn))
+	atomic.StorePointer(&pool.conn[index], unsafe.Pointer(conn))
 	return
 }
 
@@ -68,7 +69,7 @@ func NewClientConn(etcdClient *etcd.Client, target string) (conn *grpc.ClientCon
 	)
 
 	if err != nil {
-		err = errors.Wrap(err,"create grpc client err")
+		err = errors.Wrap(err, "create grpc client err")
 	}
 
 	return
