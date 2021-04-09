@@ -8,56 +8,37 @@ import (
 	"strings"
 )
 
-// DecodeXMLToMap decodes xml reading from io.Reader and returns the first-level sub-node key-value set,
-// if the first-level sub-node contains child nodes, skip it.
-func DecodeXMLToMap(r io.Reader) (m map[string]string, err error) {
-	m = make(map[string]string)
-	var (
-		decoder = xml.NewDecoder(r)
-		depth   = 0
-		token   xml.Token
-		key     string
-		value   strings.Builder
-	)
-	for {
-		token, err = decoder.Token()
-		if err != nil {
-			if err == io.EOF {
-				err = nil
-			}
-			return
-		}
+/**
+ * 根据xml字符串解析成map
+ */
+func EncodeXmlToMap(xmlStr string) map[string]string {
 
-		switch v := token.(type) {
-		case xml.StartElement:
-			depth++
-			switch depth {
-			case 2:
-				key = v.Name.Local
-				value.Reset()
-			case 3:
-				if err = decoder.Skip(); err != nil {
-					return
-				}
-				depth--
-				key = "" // key == "" indicates that the node with depth==2 has children
+	params := make(map[string]string)
+	decoder := xml.NewDecoder(strings.NewReader(xmlStr))
+
+	var (
+		key   string
+		value string
+	)
+
+	for t, err := decoder.Token(); err == nil; t, err = decoder.Token() {
+		switch token := t.(type) {
+		case xml.StartElement: // 开始标签
+			key = token.Name.Local
+		case xml.CharData: // 标签内容
+			content := string([]byte(token))
+			value = content
+		}
+		if key != "xml" {
+			if value != "\n" {
+				params[key] = value
 			}
-		case xml.CharData:
-			if depth == 2 && key != "" {
-				value.Write(v)
-			}
-		case xml.EndElement:
-			if depth == 2 && key != "" {
-				m[key] = value.String()
-			}
-			depth--
 		}
 	}
+
+	return params
 }
 
-// EncodeXMLFromMap encodes map[string]string to io.Writer with xml format.
-//  NOTE: This function requires the rootname argument and the keys of m (type map[string]string) argument
-//  are legitimate xml name string that does not contain the required escape character!
 func EncodeXMLFromMap(w io.Writer, m map[string]string, rootname string) (err error) {
 	switch v := w.(type) {
 	case *bytes.Buffer:
