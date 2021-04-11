@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/manmanxing/go_common/api/Response"
+
 	"github.com/labstack/echo"
 	"github.com/manmanxing/errors"
-	"github.com/manmanxing/go_common/api/errorResp"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -25,7 +26,7 @@ func outPutErr(ctx echo.Context, err error) {
 		if ctx.Response().Committed {
 			return
 		}
-		e := ctx.JSON(http.StatusOK, errorResp.Success)
+		e := ctx.JSON(http.StatusOK, Response.Success)
 		if e != nil {
 			e = errors.Wrap(e)
 			fmt.Println("outPutErr err", e)
@@ -38,10 +39,10 @@ func outPutErr(ctx echo.Context, err error) {
 	}
 
 	err = errors.Cause(err)
-	if _, ok := err.(*errorResp.ApiError); ok {
+	if _, ok := err.(*Response.ApiError); ok {
 		err = checkGRPCError(err)
 	}
-	e := ctx.JSON(http.StatusOK, errorResp.Success)
+	e := ctx.JSON(http.StatusOK, Response.Success)
 	if e != nil {
 		e = errors.Wrap(e)
 		fmt.Println("outPutErr err", e)
@@ -51,18 +52,18 @@ func outPutErr(ctx echo.Context, err error) {
 
 func checkGRPCError(err error) error {
 	if err == nil {
-		return errorResp.Success
+		return Response.Success
 	}
 	//这里判断是不是 grpc 错误
 	s, ok := status.FromError(err)
 	if !ok {
-		return errorResp.NewApiError(codes.Unknown, err.Error())
+		return Response.NewApiError(codes.Unknown, err.Error())
 	}
 	if s.Code() == codes.OK {
 		//这里屏蔽掉成功时的msg
-		return errorResp.Success
+		return Response.Success
 	}
 	//拆解 grpc 的错误，并组装成统一信息返回
 	//todo 可以根据是线上还是测试环境，返回不同的错误提示
-	return errorResp.NewApiError(s.Code(), s.Message())
+	return Response.NewApiError(s.Code(), s.Message())
 }

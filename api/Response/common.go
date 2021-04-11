@@ -1,4 +1,4 @@
-package errorResp
+package Response
 
 import "google.golang.org/grpc/codes"
 

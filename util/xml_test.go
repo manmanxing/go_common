@@ -20,7 +20,6 @@ func TestEncodeXMLFromMap(t *testing.T) {
 	fmt.Println(w.String())
 }
 
-
 /**
 goos: darwin
 goarch: amd64

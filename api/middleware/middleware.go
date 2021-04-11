@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/labstack/echo"
-	errorresp "github.com/manmanxing/go_common/api/errorResp"
+	errorresp "github.com/manmanxing/go_common/api/Response"
 )
 
 //自定义请求流程访问日志
