@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"time"
 
-	"code.qschou.com/qschou/go_center_common/ot"
 	"github.com/labstack/gommon/log"
 	"github.com/manmanxing/go_common/gls"
+	ot "github.com/manmanxing/go_common/opentracing"
 	"github.com/manmanxing/go_common/util"
 	"github.com/opentracing/opentracing-go"
 	"google.golang.org/grpc"
@@ -68,7 +68,7 @@ func unaryClientInterceptor(ctx context.Context, method string, req, reply inter
 
 //针对一元模式的服务端请求打印日志
 func unaryServerInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
-	traceID, pSpanID, spanID := ot.TraceInfo(ctx)
+	traceID, pSpanID, spanID := ot.GetTraceInfoFromContext(ctx)
 	gls.SetGlsWithCtx(traceID, pSpanID, spanID, ctx, func() {
 		resp, err = _UnaryServerInterceptor(ctx, req, info, handler)
 	})
