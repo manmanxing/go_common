@@ -12,7 +12,6 @@ var _ error = (*base)(nil)
 var _ StackTracer = (*base)(nil)
 var _ errorStacker = (*base)(nil)
 
-
 // New returns an error with the supplied message.
 // New also records the stack trace at the point it was called.
 func New(msg string) error {

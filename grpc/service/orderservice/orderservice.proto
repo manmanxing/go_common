@@ -22,8 +22,50 @@ message CreateOrderRequest{
   int64 user_id = 1;
   string app_id = 2;
   string mch_id = 3;
+  string sub_app_id = 4;
+  string sub_mch_id = 5;
+  string bus_type = 6;
+  string source_type = 7;
+  string channel_type = 8;
+  string receipt_symbol = 9;
+  string bus_trade_no = 10;
+  repeated busProductsList bus_products = 11;
+  string payType = 12;
+  int64 transaction_mode = 13;
+  int64 currency = 14;
+  int64 trade_amount = 15;
+  int64 pay_amount = 16;
+  int64 feight = 17;
+  int64 merchant_coupon = 18;
+  int64 platform_coupon = 19;
+  int64 trade_description = 20;
+  int64 expire_time = 21;
+  int64 remark = 22;
+}
+
+message busProductsList {
+  string bus_type = 1;
+  string product_type = 2;
+  string commodity_sku_id = 3;
+  string bus_order_no = 4;
+  int64  goods_amount = 5;
+  int64  amount = 6;
+  int64 merchant_coupon = 7;
+  int64  platform_coupon = 8;
+  int64  freight = 9;
+  int64  supplier_name = 10;
+  int64  purchase_amount = 11;
+  string  remark = 12;
 }
 
 message CreateOrderReply{
-  string trade_no  = 1;
+  string trade_no = 1;
+  string bus_trade_no = 2;
+  string pay_no = 3;
+  repeated orderNoList orderNos = 4;
+}
+
+message orderNoList {
+  string order_no = 1;
+  string bus_order_no = 2;
 }
