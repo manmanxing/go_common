@@ -2,6 +2,11 @@ package util
 
 import (
 	"strconv"
+
+	"github.com/jinzhu/gorm"
+	"github.com/manmanxing/errors"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 // FormatSequenceNo 格式化 seq 为 12 位的十进制字符串.
@@ -28,4 +33,18 @@ func LowestFourBytesForUserID(userID int64) string {
 	default: // n < 4:
 		return "0000"[:4-n] + str
 	}
+}
+
+func ChangeErr2Grpc(err error) error {
+	err = errors.Cause(err)
+	if _, ok := status.FromError(err); ok {
+		return err
+	}
+	if err == gorm.ErrRecordNotFound {
+		return status.Errorf(codes.NotFound, "非法操作")
+	}
+	if err != nil {
+		return status.Errorf(codes.Internal, err.Error())
+	}
+	return err
 }

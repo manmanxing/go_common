@@ -57,6 +57,10 @@ func getClient(endPoints []string) (*etcd.Client, error) {
 	return client, nil
 }
 
+func GetClient(endPoints []string) (*etcd.Client, error) {
+	return getClient(endPoints)
+}
+
 func NewClient() (*etcd.Client, error) {
 	for {
 		p := (*etcd.Client)(atomic.LoadPointer(&__ClientPointer))
