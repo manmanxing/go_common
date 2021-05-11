@@ -101,6 +101,6 @@ func NewOrderNo(userId int64) (string, error) {
 	//拼接 orderNo
 	//20060102 + 12位数字 + 用户id的后四位
 	return time.Now().In(util.BeijingLocation).Format(util.TimeShortFormat) +
-		util.FormatSequenceNo(seq) +
-		util.LowestFourBytesForUserID(userId), nil
+		FormatSequenceNo(seq) +
+		LowestFourBytesForUserID(userId), nil
 }
