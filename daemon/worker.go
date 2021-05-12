@@ -6,6 +6,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/manmanxing/go_common/beacon/etcd"
+
 	"github.com/labstack/gommon/log"
 	"github.com/manmanxing/go_common/util"
 )
@@ -55,7 +57,11 @@ func (w *WorkerInfo) Work() {
 			w.wg.Done()
 		}
 	}()
-
+	client, err := etcd.NewClient()
+	if err != nil {
+		fmt.Println("get etcd client err:", err)
+		return
+	}
 	for {
 		select {
 		case <-w.ctx.Done():
@@ -63,7 +69,8 @@ func (w *WorkerInfo) Work() {
 			return
 		default:
 			//开始执行任务
-			_, err := w.Task()
+			<-Campaign(client, w.ctx, w.wg)
+			_, err = w.Task()
 			if err != nil {
 				log.Error("worker name:", w.Name, "err", err.Error())
 			}

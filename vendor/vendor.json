@@ -439,6 +439,12 @@
 			"revisionTime": "2019-08-30T15:09:55Z"
 		},
 		{
+			"checksumSHA1": "PA6JrDEXrmtzgdBEyEWGlLYj7hA=",
+			"path": "go.etcd.io/etcd/clientv3/concurrency",
+			"revision": "898bd1351fcf6e0ebce8d7c8bbbbf3f3e42aa42c",
+			"revisionTime": "2019-08-30T15:09:55Z"
+		},
+		{
 			"checksumSHA1": "gZGlYDbc4y4p4iq/NBjhLbROxgo=",
 			"path": "go.etcd.io/etcd/clientv3/credentials",
 			"revision": "898bd1351fcf6e0ebce8d7c8bbbbf3f3e42aa42c",
