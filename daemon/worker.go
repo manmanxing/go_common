@@ -70,14 +70,17 @@ func (w *WorkerInfo) Work() {
 			return
 		case <-isLeader: //监听选主成功信号，若选主失败，会阻塞
 			//开始执行任务
-			_, err = w.Task()
-			if err != nil {
-				log.Error("worker name:", w.Name, "err", err.Error())
+			idle, e := w.Task()
+			if e != nil {
+				log.Error("worker name:", w.Name, "err", e.Error())
 			}
-			fmt.Println("任务执行完毕...")
+			if idle {
+				time.Sleep(w.IdleSleepTime)
+			} else {
+				time.Sleep(w.BusySleepTime)
+			}
 		}
-		time.Sleep(time.Second * 15)
-		fmt.Println("next for ...")
+		time.Sleep(time.Second * 2)
 	}
 }
 
