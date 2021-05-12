@@ -13,10 +13,8 @@ import (
 	"github.com/manmanxing/go_common/util"
 )
 
-//这是选举的prefix
 const (
-	CampaignPrefix = "/election-test-demo"
-	num            = 5 //表示需要发送的success信号数量，最好跟子节点数量相同
+	CampaignPrefix = "/election-test-demo" //这是选举的prefix
 )
 
 //这里返回的 channel 表示已经成功选主为 leader
@@ -30,7 +28,7 @@ func Campaign(c *clientv3.Client, parentCtx context.Context, wg *sync.WaitGroup)
 		wg.Add(1)
 	}
 
-	hasLeader := make(chan struct{}, num)
+	hasLeader := make(chan struct{}, 1)
 
 	go func() {
 		defer func() {
