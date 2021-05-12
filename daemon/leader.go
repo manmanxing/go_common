@@ -13,11 +13,14 @@ import (
 	"github.com/manmanxing/go_common/util"
 )
 
-
 //这是选举的prefix
-const CampaignPrefix = "/election-test-demo"
+const (
+	CampaignPrefix = "/election-test-demo"
+	num            = 5 //表示需要发送的success信号数量，最好跟子节点数量相同
+)
 
-//这里返回的 success 表示已经成功选主为 leader
+//这里返回的 channel 表示已经成功选主为 leader
+//所有worker可以监听这个channel，这种实现可以让worker阻塞等待节点成为leader，而不是轮询是否是leader节点。
 func Campaign(c *clientv3.Client, parentCtx context.Context, wg *sync.WaitGroup) (success <-chan struct{}) {
 	//这里选择当前机器的ip作为etcd的value
 	ip := util.GetLocalIP().String()
@@ -27,7 +30,7 @@ func Campaign(c *clientv3.Client, parentCtx context.Context, wg *sync.WaitGroup)
 		wg.Add(1)
 	}
 
-	hasLeader := make(chan struct{})
+	hasLeader := make(chan struct{}, num)
 
 	go func() {
 		defer func() {
@@ -54,6 +57,7 @@ func Campaign(c *clientv3.Client, parentCtx context.Context, wg *sync.WaitGroup)
 			//根据 session 与 keyPrefix 开始选主
 			e := concurrency.NewElection(s, CampaignPrefix)
 			//调用Campaign方法，成为leader的节点会运行出来，非leader节点会阻塞在里面。
+			//ctx.done 会导致这里报错
 			if err = e.Campaign(ctx, ip); err != nil {
 				fmt.Println("etcd campaign err", err)
 				_ = s.Close()
@@ -65,7 +69,7 @@ func Campaign(c *clientv3.Client, parentCtx context.Context, wg *sync.WaitGroup)
 			shouldBreak := false
 			for !shouldBreak { //会不断的告诉其他的运行worker的服务，这里已经选主成功
 				select {
-				case hasLeader <- struct{}{}: //选主成功信号
+				case hasLeader <- struct{}{}: //选主成功信号，channel 满了会阻塞
 				case <-s.Done(): //如果与etcd断开了keepAlive，这里break，重新创建session，重新选举
 					fmt.Println("session has done")
 					shouldBreak = true

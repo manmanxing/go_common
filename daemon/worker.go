@@ -62,14 +62,14 @@ func (w *WorkerInfo) Work() {
 		fmt.Println("get etcd client err:", err)
 		return
 	}
+	isLeader := Campaign(client, w.ctx, w.wg)
 	for {
 		select {
 		case <-w.ctx.Done():
-			fmt.Println("程序关闭...")
+			fmt.Println(fmt.Sprintf("worker %s 关闭...", w.Name))
 			return
-		default:
+		case <-isLeader: //监听选主成功信号，若选主失败，会阻塞
 			//开始执行任务
-			<-Campaign(client, w.ctx, w.wg)
 			_, err = w.Task()
 			if err != nil {
 				log.Error("worker name:", w.Name, "err", err.Error())
@@ -78,7 +78,6 @@ func (w *WorkerInfo) Work() {
 		}
 		time.Sleep(time.Second * 15)
 		fmt.Println("next for ...")
-
 	}
 }
 
