@@ -7,6 +7,10 @@ service OrderService {
   rpc Ping (PingRequest) returns (PingReply) {}
   //创建订单
   rpc CreateOrder (CreateOrderRequest) returns (CreateOrderReply){}
+  //微信支付
+  rpc WxPay (WXPayReply) returns (WxPayRequest){}
+  //支付宝支付
+  rpc AliPay(AliPayReply) returns (AliPayRequest){}
 }
 
 
@@ -20,54 +24,109 @@ message PingReply {
 
 message CreateOrderRequest{
   int64 user_id = 1;
-  string app_id = 2;
-  string mch_id = 3;
-  string sub_app_id = 4;
-  string sub_mch_id = 5;
+  int64  trade_mode = 2;
+  int64 trade_type = 3;
+  int64 trade_sub_type = 4;
+  string app_id = 5;
   string bus_type = 6;
-  string source_type = 7;
-  string channel_type = 8;
-  string receipt_symbol = 9;
-  string bus_trade_no = 10;
-  repeated busProductsList bus_products = 11;
-  string payType = 12;
-  int64 transaction_mode = 13;
-  string currency = 14;
-  int64 trade_amount = 15;
-  int64 pay_amount = 16;
-  int64 freight = 17;
-  int64 merchant_coupon = 18;
-  int64 platform_coupon = 19;
-  string trade_description = 20;
-  string expire_time = 21;
-  string remark = 22;
-  string sign = 23;
-  int64 timestamp = 24;
+  string bus_trade_no = 7;
+  repeated busProductsList bus_products = 8;
+  string currency = 9;
+  int64 trade_amount = 10;
+  int64 pay_amount = 11;
+  int64 freight = 12;
+  int64 merchant_coupon = 13;
+  int64 platform_coupon = 14;
+  string expire_time = 15;
+  string remark = 16;
+  string trade_extra_info = 17;
 }
 
 message busProductsList {
   string bus_type = 1;
   string product_type = 2;
-  string commodity_sku_id = 3;
-  string bus_order_no = 4;
-  int64  goods_amount = 5;
-  int64  amount = 6;
-  int64 merchant_coupon = 7;
-  int64  platform_coupon = 8;
-  int64  freight = 9;
-  int64  supplier_name = 10;
-  int64  purchase_amount = 11;
-  string  remark = 12;
+  string commodity_id = 3;
+  string commodity_name = 4;
+  string bus_order_no = 5;
+  int64  goods_amount = 6;
+  int64  pay_amount = 7;
+  int64  supplier_code = 8;
+  int64  purchase_amount = 9;
+  string  extra_info = 10;
+  repeated FeeInfo fee_list = 11;
+}
+
+message FeeInfo {
+  int64 fee_type = 1;
+  int64 fee = 2;
 }
 
 message CreateOrderReply{
   string trade_no = 1;
   string bus_trade_no = 2;
-  string pay_no = 3;
-  repeated orderNoList orderNos = 4;
+  repeated orderNoList orderNos = 3;
 }
 
 message orderNoList {
   string order_no = 1;
   string bus_order_no = 2;
+}
+
+message WxPayRequest {
+  int64 user_id = 1;
+  string trade_no = 2;
+  int64 pay_amount = 3;
+  string pay_type = 4;
+  string description = 5;
+  string client_ip = 6;
+  string app_id = 7;
+  string product_id = 8;
+  string scene_info = 9;
+  string receipt_symbol = 10;
+}
+
+message WXPayReply {
+  string prepay_id = 1;
+  string code_url = 2;
+  string mweb_url = 3;
+  string app_id = 4;
+  string timestamp = 5;
+  string nonce_str = 6;
+  string package = 7;
+  string sign_type = 8;
+  string pay_sign = 9;
+  string mch_id = 10;
+}
+
+
+
+message AliPayRequest {
+  int64 user_id = 1;
+  string trade_no = 2;
+  int64 pay_amount = 3;
+  string pay_type = 4;
+  string app_id = 5;
+  string description = 6;
+  string return_url = 7;
+  string buyer_id = 8;
+  string receipt_symbol = 9;
+}
+
+
+message AliPayReply {
+  string H5_html = 1;
+  string ali_trade_no = 2;
+  AlipayAppInfo appReply = 3;
+}
+
+message AlipayAppInfo {
+  string charset = 1;
+  string sign_type = 2;
+  string sign = 3;
+  string notify_url = 4;
+  string timestamp = 5;
+  string version = 6;
+  string method = 7;
+  string product_code = 8;
+  string biz_content = 9;
 }
