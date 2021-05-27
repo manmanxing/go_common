@@ -23,7 +23,7 @@ var __ClientPointer unsafe.Pointer
 //获取 ETCD_ADDR 节点地址列表
 func getEndPoints() (endPoints []string, err error) {
 	defer func() {
-		fmt.Println("getEndPoints now ", time.Now().Format(util.TimeLongFormat_), "ETCD_ADDR ", endPoints, "err ", err)
+		fmt.Println("getEndPoints now ", time.Now().Format(util.TimeFormatDateTime), "ETCD_ADDR ", endPoints, "err ", err)
 	}()
 
 	v, ok := os.LookupEnv(address)

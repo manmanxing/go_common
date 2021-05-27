@@ -16,7 +16,7 @@ import (
 //根据key获取value
 func GetValue(key string) (value string, err error) {
 	defer func() {
-		fmt.Println("Get ETCD value now ", time.Now().Format(util.TimeLongFormat_), "key ", key, "err ", err)
+		fmt.Println("Get ETCD value now ", time.Now().Format(util.TimeFormatDateTime), "key ", key, "err ", err)
 	}()
 
 	if len(strings.TrimSpace(key)) <= 0 {

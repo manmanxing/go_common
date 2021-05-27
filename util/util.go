@@ -74,3 +74,32 @@ func GetLocalIP() net.IP {
 	}
 	return net.IPv4zero
 }
+
+/**
+ * 从身份证号中获取生日
+ * @params idCard		身份证号
+ * @params separator	生日分隔符
+ * @return 	生日
+ * @return 	错误
+ */
+func TimeGetBirthday(idCard string, separator string) (birthday string, err error) {
+	var (
+		year  string
+		month string
+		day   string
+	)
+	idCardRune := []rune(idCard)
+	if len(idCard) == 18 {
+		year = string(idCardRune[6:10])
+		month = string(idCardRune[10:12])
+		day = string(idCardRune[12:14])
+	} else if len(idCard) == 15 {
+		year = "19" + string(idCardRune[6:8])
+		month = string(idCardRune[8:10])
+		day = string(idCardRune[10:12])
+	} else {
+		return
+	}
+	birthday = year + separator + month + separator + day
+	return
+}
