@@ -13,13 +13,9 @@ import (
 	"github.com/manmanxing/go_common/util"
 )
 
-const (
-	CampaignPrefix = "/election-test-demo" //这是选举的prefix
-)
-
 //这里返回的 channel 表示已经成功选主为 leader
 //所有worker可以监听这个channel，这种实现可以让worker阻塞等待节点成为leader，而不是轮询是否是leader节点。
-func Campaign(c *clientv3.Client, parentCtx context.Context, wg *sync.WaitGroup) (success <-chan struct{}) {
+func Campaign(c *clientv3.Client, parentCtx context.Context, wg *sync.WaitGroup, CampaignPrefix string) (success <-chan struct{}) {
 	//这里选择当前机器的ip作为etcd的value
 	ip := util.GetLocalIP().String()
 	ctx, _ := context.WithCancel(parentCtx)
