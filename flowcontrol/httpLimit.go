@@ -32,6 +32,7 @@ func InitHttpFlowRate(serviceName string, e *echo.Echo) {
 			}
 		}
 
+		//配置每个路由的限流规则
 		rule := &flow.FlowRule{
 			Resource:          fmt.Sprintf("%s:%s", v.Method, v.Path),
 			MetricType:        flow.QPS,

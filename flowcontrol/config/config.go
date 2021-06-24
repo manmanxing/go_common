@@ -33,6 +33,32 @@ type FcConfigInfo struct {
 
 var HttpControlInfo *FcConfig
 
+/**
+{
+    "service":"go_center_gateway",
+    "rules":{
+        "GET:/":{
+            "key":"GET:/",
+            "threshold_warn":400,
+            "threshold_control":4000,
+            "control_type":"REJECT"
+        },
+        "POST:/centerpay/wxpay":{
+            "key":"POST:/centerpay/wxpay",
+            "threshold_warn":50,
+            "threshold_control":500,
+            "control_type":"REJECT"
+        }
+    },
+    "default_rule":{
+        "threshold_warn":100,
+        "threshold_control":2000,
+        "control_type":"REJECT"
+    },
+    "dingtalk_url":"https://oapi.dingtalk.com/robot/send?access_token=dc405ef8d8797e5a0f525549f898f6ed20f8ee03653d652bd031981a70dd7a86"
+}
+*/
+
 func init() {
 	bt, err := etcd.GetValue(FlowControlEtcdPath)
 	if err != nil {
