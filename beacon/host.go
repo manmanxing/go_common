@@ -14,6 +14,8 @@ import (
 	"github.com/manmanxing/errors"
 )
 
+const BEACON_HOST = "BEACON_HOST"
+
 var __httpClient = &http.Client{
 	Timeout: time.Second * 5,
 }
@@ -22,7 +24,7 @@ func getBeaconHost() (host string, err error) {
 	defer func() {
 		fmt.Println("beaconHost", host, "error", err)
 	}()
-	v, ok := os.LookupEnv("BEACON_HOST")
+	v, ok := os.LookupEnv(BEACON_HOST)
 	if !ok {
 		err = errors.Wrap(errors.New("environment variable not found: BEACON_HOST"))
 		return "", err
@@ -30,7 +32,7 @@ func getBeaconHost() (host string, err error) {
 	return strings.TrimSpace(v), nil
 }
 
-//返回服务对外提供服务的 host
+//返回服务对外提供服务的 grpc  host
 func ServiceHost() (ret string, err error) {
 	defer func() {
 		fmt.Println("ServiceHost", ret, "error", err)
@@ -56,14 +58,15 @@ func ServiceHost() (ret string, err error) {
 		err = errors.Wrap(fmt.Errorf("get service host failed, returned http status: %s", resp.Status))
 		return "", err
 	}
-	//body: a0e5e536e0eca350efc7c57908b0ea6910.111.157.136
+	//body: a0e5e536e0eca350efc7c57908b0ea69127.0.0.1
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		err = errors.Wrap(err, "io read err")
 		return "", err
 	}
 	body = bytes.TrimSpace(body)
-
+	bodyStr := string(body)
+	fmt.Println(bodyStr)
 	sumLen := hex.EncodedLen(md5.Size)
 	if len(body) <= sumLen {
 		err = errors.Wrap(fmt.Errorf("get service host failed, too short, returned http body: %s", body))

@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	address = "ETCD_ADDR"
+	ETCD_ADDR = "ETCD_ADDR"
 )
 
 // *etcd.Client
@@ -26,7 +26,7 @@ func getEndPoints() (endPoints []string, err error) {
 		fmt.Println("getEndPoints now ", time.Now().Format(util.TimeFormatDateTime), "ETCD_ADDR ", endPoints, "err ", err)
 	}()
 
-	v, ok := os.LookupEnv(address)
+	v, ok := os.LookupEnv(ETCD_ADDR)
 	if !ok {
 		return nil, errors.New("The environment variable ETCD_ADDR not found")
 	}

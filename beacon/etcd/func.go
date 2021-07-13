@@ -71,7 +71,7 @@ func Put(key, value string) (err error) {
 		return err
 	}
 	if !txnResp.Succeeded {
-		err = errors.Errorf("锁被占用:", string(txnResp.Responses[0].GetResponseRange().Kvs[0].Value))
+		err = errors.Errorf("锁被占用:%s", string(txnResp.Responses[0].GetResponseRange().Kvs[0].Value))
 		return
 	}
 	return nil
