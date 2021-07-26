@@ -45,6 +45,11 @@ func ClientConn(target string) (conn *grpc.ClientConn, err error) {
 	__connTablePtrMutex.Lock()
 	defer __connTablePtrMutex.Unlock()
 
+	//再次尝试获取一次
+	if pool := p.m[target]; pool != nil {
+		return pool.getClientConn()
+	}
+
 	pool := &clientConnPool{
 		target: target,
 	}
@@ -72,8 +77,7 @@ type clientConnPool struct {
 func (pool *clientConnPool) getClientConn() (conn *grpc.ClientConn, err error) {
 	//从连接池里随机选择一个连接
 	index := rand.Intn(len(pool.conn))
-	p := atomic.LoadPointer(&pool.conn[index])
-	if p != nil {
+	if p := atomic.LoadPointer(&pool.conn[index]); p != nil {
 		conn = (*grpc.ClientConn)(p)
 		return nil, nil
 	}
@@ -81,6 +85,12 @@ func (pool *clientConnPool) getClientConn() (conn *grpc.ClientConn, err error) {
 	//如果没有就从 etcd 中获取
 	pool.Lock()
 	defer pool.Unlock()
+
+	//再次尝试获取一次
+	if p := atomic.LoadPointer(&pool.conn[index]); p != nil {
+		conn = (*grpc.ClientConn)(p)
+		return nil, nil
+	}
 
 	newEtcdClient, err := myEtcd.NewClient()
 	if err != nil {

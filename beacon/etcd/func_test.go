@@ -6,9 +6,9 @@ import (
 )
 
 func TestFunc(t *testing.T) {
-	_,err := NewClient()
+	_, err := NewClient()
 	if err != nil {
-		fmt.Println("err:",err)
+		fmt.Println("err:", err)
 		return
 	}
 }

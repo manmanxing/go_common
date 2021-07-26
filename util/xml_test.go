@@ -50,3 +50,8 @@ func BenchmarkEncodeXMLFromMap(b *testing.B) {
 		_ = EncodeXMLFromMap(w, demo, "xml")
 	}
 }
+
+func TestStringJoin(t *testing.T) {
+	a := []int{1, 2, 3, 4, 5}
+	fmt.Println(StringJoin(a, ","))
+}

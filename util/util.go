@@ -103,3 +103,36 @@ func TimeGetBirthday(idCard string, separator string) (birthday string, err erro
 	birthday = year + separator + month + separator + day
 	return
 }
+
+func RemoveRepByLoop(slc []int) []int {
+	var result []int // 存放结果
+	for i := range slc {
+		flag := true
+		for j := range result {
+			if slc[i] == result[j] {
+				flag = false // 存在重复元素，标识为false
+				break
+			}
+		}
+		if flag { // 标识为false，不添加进结果
+			result = append(result, slc[i])
+		}
+	}
+	return result
+}
+
+func StringJoin(a []int, split string) string {
+	result := ""
+	if len(a) <= 0 {
+		return result
+	}
+
+	for i := range a {
+		result += strconv.Itoa(a[i])
+		if i < len(a)-1 {
+			result += split
+		}
+	}
+
+	return result
+}
